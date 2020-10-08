@@ -45,6 +45,11 @@ const CurdudemySchema = new mongoose.Schema({
     required:[true , "enter category"],
     trim:true
   },
+  photo:{
+    type:String,
+    default: 'no-image.jpg'
+  },
+
 
  });
 

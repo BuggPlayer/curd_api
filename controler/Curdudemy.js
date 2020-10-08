@@ -1,3 +1,4 @@
+const path = require("path");
 const Curdmodel = require("../model/CURDudemyModel");
 
 // @desc   all_data
@@ -37,9 +38,8 @@ exports.getSingleData = async (req, res, next) => {
 exports.CreateData = async (req, res, next) => {
   console.log("body ", req.body);
   try {
-    
     const createdata = await Curdmodel.create(req.body);
-  
+
     res.status(200).json({ success: true, data: createdata });
     console.log("create data", createdata);
   } catch (error) {
@@ -85,26 +85,51 @@ exports.DeleteData = async (req, res, next) => {
   }
 };
 
-
 //@desc  upload photo for udamy
 //@route PUT /:id/photo
 //@access private
 exports.photoupload = async (req, res, next) => {
-  
   try {
-    const photoupload = await Curdmodel.findByIdAndDelete(req.params.id);
+    const photoupload = await Curdmodel.findById(req.params.id);
     if (!photoupload) {
-      return res.status(400).json({ success: false });
+      return res
+        .status(400)
+        .json({ success: false, data: "entert NOT FOUND " });
     }
-   // console.log("files", req.files);
-  if(!req.files){
-    return res.status(400).json({success:false , data:"please uplaod a file "})
-  }
-  console.log(req.file);
-  console.log("heelo");
 
+    if (!req.files) {
+      return res.status(400).json({ success: false, data: "entert file " });
+    }
 
+    const file = req.files.file;
+    // make sure image is photo
 
+    if (!file.mimetype.startsWith("image")) {
+      return res
+        .status(400)
+        .json({ success: false, data: "upload image file " });
+    }
+
+    //cheack file size
+    if (file.size > 1000000) {
+      return res
+        .status(400)
+        .json({ success: false, data: "uplease upload less than 100000 " });
+    }
+
+    // create  custom file name
+    file.name = `photo_${photoupload._id}${path.parse(file.name).ext}`;
+    file.mv(`./public/uploads${file.name}`, async (err) => {
+      if (err) {
+        console.error(err);
+        return res
+          .status(500)
+          .json({ success: false, data: "problem with file upload " });
+      }
+
+      await Curdmodel.findByIdAndUpdate(req.params.id, { photo: file.name });
+      res.status(200).json({ success: true, data: file.name });
+    });
   } catch (error) {
     res.status(400).json({ success: false });
   }

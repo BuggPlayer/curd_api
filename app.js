@@ -1,3 +1,4 @@
+const path = require("path")
 const express = require("express");
 const fileupload = require("express-fileupload");
 const mongoose = require("mongoose");
@@ -10,6 +11,11 @@ const app = express();
 app.use(express.json());
 // file upload
 app.use(fileupload());
+
+
+// set static folder
+app.use(express.static(path.join(__dirname, 'public')))
+
 app.use("/", CURDrouter);
 
 //db connection URl

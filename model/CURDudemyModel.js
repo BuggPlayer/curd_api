@@ -40,17 +40,20 @@ const CurdudemySchema = new mongoose.Schema({
     required: [true, "enter the title"],
     trim: true,
   },
-  category:{
-    type:String,
-    required:[true , "enter category"],
-    trim:true
+  category: {
+    type: String,
+    required: [true, "enter category"],
+    trim: true,
   },
-  photo:{
-    type:String,
-    default: 'no-image.jpg'
+  photo: {
+    type: String,
+    default: "no-image.jpg",
   },
-
-
- });
+  openUrl: {
+    type: String,
+    required: [true, "enter URl"],
+    trim: true,
+  },
+});
 
 module.exports = mongoose.model("Curd_data", CurdudemySchema);

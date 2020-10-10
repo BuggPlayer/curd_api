@@ -33,6 +33,7 @@ const Dbconnection = async () => {
     console.log("db conected");
   } catch (error) {
     console.log(error);
+    
   }
 };
 Dbconnection();

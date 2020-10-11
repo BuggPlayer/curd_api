@@ -54,6 +54,10 @@ const CurdudemySchema = new mongoose.Schema({
     required: [true, "enter URl"],
     trim: true,
   },
+  language: {
+    type: String,
+    trim: true,
+  },
 });
 
 module.exports = mongoose.model("Curd_data", CurdudemySchema);
